@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pl_PL">
+<head>
+    <meta charset="UTF-8">
+    <title>Tiles</title>
+    <style>
+        .body {
+            margin: 0;
+            padding: 0;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-color: black;
+        }
+        p {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .main {
+            margin: 0;
+            padding: 0;
+            left: 0;
+            top: 0;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+        }
+        .container {
+            position: absolute;
+            left: 50%;
+            top: 60%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            width: 512px;
+            height: 512px;
+            margin: 0;
+            padding: 0;
+        }
+        br {
+            display: block;
+            content: '';
+            margin: -5px;
+            font-size: 24%;
+            width: 1px;
+            position: relative;
+        }
+        p {
+            text-align: center;
+            color: white;
+        }
+        .submit_container {
+            margin: auto;
+            width: 60%;
+            padding: 10px;
+            text-align: center;
+        }
+        img {
+            display: inline-block;
+            margin-top: -4px;
+            user-drag: none;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-drag: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        .tile {
+            /*position: absolute;*/
+        }
+        #timer {
+            text-align: left;
+            color: white;
+            position: absolute;
+            top: 15px;
+            left: 0;
+        }
+    .overlay {
+        position: fixed; /* Sit on top of the page content */
+        visibility: hidden;
+        width: 100%; /* Full width (cover the whole page) */
+        height: 100%; /* Full height (cover the whole page) */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(3, 252, 144, 0.8); /* Black background with opacity */
+        z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    }
+        .time, .moves, .form_container, .highscores, .difficulty_level {
+            width: auto;
+            height: auto;
+            position: relative;
+            left: 50%;
+            top: 30%;
+            margin-left: -100px;
+
+        }
+        .difficulty_level {
+            margin-top: -100px;
+        }
+
+        .X, .closer {
+            background-color: red;
+            color: white;
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: pointer; /* Add a pointer on hover */
+            font-size: 30px;
+            text-align: center;
+
+        }
+        .open_score {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background-color: blue;
+            color: white;
+            cursor: pointer;
+        }
+        .score_board {
+            position: fixed; /* Sit on top of the page content */
+            visibility: hidden;
+            width: 60%; /* Full width (cover the whole page) */
+            height: 60%; /* Full height (cover the whole page) */
+            top: 20%;
+            left: 20%;
+            right: 20%;
+            bottom: 20%;
+            background-color: rgba(3, 252, 144, 0.95); /* Black background with opacity */
+            z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+        }
+        .arrow {
+            cursor: pointer;
+        }
+        .images_container {
+            margin-left: calc((100% - 100px)/2);
+            text-align: center;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            flex-wrap: nowrap;
+            overflow: hidden;
+        }
+        .images_container > img {
+            flex: 0 0 auto;
+        }
+    </style>
+    <script src="index.js" defer></script>
+</head>
+<body>
+<div class="main">
+    <div class="overlay">
+        <div class="X">X</div>
+        <div class="difficulty_level"></div>
+        <div class="time"></div>
+        <div class="moves"></div>
+        <div class="highscores"></div>
+        <div class="form_container">
+            <form>
+                <input id="nick" type="text" placeholder="Nazwa">
+                <input type="submit" value="Zapisz wynik">
+            </form>
+        </div>
+    </div>
+    <div class="open_score">Otwórz wyniki</div>
+    <div class="score_board">
+<form id="scoreboard">
+        <input type="radio" id="2x2" name="radio" size="2"
+               checked
+        >
+        <label for="2x2">2x2</label>
+
+        <input type="radio" id="3x3" name="radio" size="3">
+        <label for="3x3">3x3</label>
+
+        <input type="radio" id="4x4" name="radio" size="4">
+        <label for="4x4">4x4</label>
+
+        <input type="radio" id="5x5" name="radio" size="5">
+        <label for="5x5">5x5</label>
+
+        <input type="radio" id="6x6" name="radio" size="6">
+        <label for="6x6">6x6</label>
+</form>
+
+
+
+
+        <div class="closer">X</div><div class="scores"></div></div>
+    <p class="arrow prev"><</p>
+    <div class="images_container">
+        <img class="obraz" src="resources/images/image1.jpg" width="100px" height="100px">
+        <img class="obraz" src="resources/images/image2.jpg" width="100px" height="100px">
+        <img class="obraz" src="resources/images/image3.jpg" width="100px" height="100px">
+        <img class="obraz" src="resources/images/image4.jpg" width="100px" height="100px">
+        <img class="obraz" src="resources/images/image1.jpg" width="100px" height="100px">
+    </div>
+    <p class="arrow next">></p>
+    <div class="submit_container">
+        <input class="game_starters" type="submit" value="2x2" size=2>
+        <input class="game_starters" type="submit" value="3x3" size=3>
+        <input class="game_starters" type="submit" value="4x4" size=4>
+        <input class="game_starters" type="submit" value="5x5" size=5>
+        <input class="game_starters" type="submit" value="6x6" size=6>
+
+    </div>
+    <div id="timer">
+    </div>
+
+    <div class="container">
+
+    </div>
+</div>
+
+</body>
+</html>
