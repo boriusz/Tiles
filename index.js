@@ -4,6 +4,7 @@ const overlay = document.querySelector('.overlay');
 const submit = document.querySelector('input[type="submit"]');
 const highscore = document.querySelector('.highscores');
 const image_source_template = 'resources/images/image';
+const ps = document.querySelectorAll('p');
 const scrollable = document.querySelector('.images_container');
 blankImage.style = `display: none;`;
 let size, intervalOn, interwal;
@@ -18,23 +19,23 @@ const splitting = {
     current_image: 1,
     to_move: 0,
     skip_image: function () {
-        document.querySelector('.prev').addEventListener('click',  () => {
-            this.to_move -= 100;
+        document.querySelector('.prev').onclick = function prev_skip() {
+            splitting.to_move -= 100;
             if (splitting.current_image === 1) {
                 splitting.current_image = 4;
                 scrollable.scrollLeft = 1000
             } else {
-                this.current_image -= 1
+                splitting.current_image -= 1
             }
-            this.go(false);
+            splitting.go(false);
 
-        });
-        document.querySelector('.next').addEventListener('click',  () => {
-            this.to_move += 100;
+        };
+        document.querySelector('.next').onclick = function next_skip() {
+            splitting.to_move += 100;
             if (splitting.current_image === 4) {
                 splitting.current_image = 1;
-                this.to_move = 400;
-                this.go(true);
+                splitting.to_move = 400;
+                splitting.go(true);
                 let wait_interval = setInterval(function () {
                     if (scrollable.scrollLeft === 400) {
                         scrollable.scrollLeft = 0;
@@ -43,12 +44,14 @@ const splitting = {
                     }
                 },1)
             } else {
-                this.current_image += 1;
-                this.go(true);
+                splitting.current_image += 1;
+                splitting.go(true);
             }
-        });
+        };
     },
     go: function (flag) {
+        document.querySelector('.prev').onclick = null
+        document.querySelector('.next').onclick = null
         clearInterval(interwal)
         if (splitting.to_move === - 100) splitting.to_move = 300
         let target = splitting.to_move;
@@ -58,12 +61,15 @@ const splitting = {
             scrollable.scrollBy(2, 0)
             if (scrollable.scrollLeft >= target){
                 clearInterval(interwal)
+                splitting.skip_image()
             }
         }
         function left() {
             scrollable.scrollBy(-2, 0)
             if (scrollable.scrollLeft <= target){
                 clearInterval(interwal)
+                splitting.skip_image()
+
             }
         }
 
@@ -254,12 +260,13 @@ const game = {
             let prev;
             let nick = document.querySelector('#nick').value;
             if (!nick) nick = 'N/A';
+            nick = encodeURIComponent(nick)
             if (cookies.getCookie(`highscores${size}`)) {
                 prev = JSON.parse(cookies.getCookie(`highscores${size}`));
             } else {
                 prev = [];
             }
-            prev.push({ nick: nick, time: time, clicks: game.moveCounter });
+            prev.push({ nick: encodeURIComponent(nick), time: time, clicks: game.moveCounter });
             document.querySelector('form').reset();
             cookies.setCookie(`highscores${size}`, `${JSON.stringify(prev)}`);
             cookies.displayCookie(size, 0);
@@ -273,7 +280,7 @@ const game = {
 const cookies = {
     setCookie: (cname, cvalue) => {
         document.cookie = cname + "=" + cvalue + ";path=/";
-        let cooks = ((JSON).parse(cookies.getCookie(cname)));
+        let cooks = JSON.parse(cookies.getCookie(cname));
         cooks.sort((a, b) => parseFloat(a.time.replaceAll(":", '')) - parseFloat(b.time.replaceAll(":", '')));
         if (cooks.length > 10) {
             while (cooks.length > 10) {
@@ -304,7 +311,7 @@ const cookies = {
             cook.sort((a, b) => parseFloat(a.time.replaceAll(":", '')) - parseFloat(b.time.replaceAll(":", '')));
             let text = `<ol>`;
             for (let c of cook){
-                text += `<li>${c.nick} - ${c.time}   ruchy: ${c.clicks}</li>`;
+                text += `<li>${decodeURIComponent(c.nick)} - ${c.time}   ruchy: ${c.clicks}</li>`;
             }
             text += `</ol>`;
             if (where === 0) highscore.innerHTML = text;
